@@ -4,8 +4,6 @@ This is a ruby client that communicates with Hanvon Time & Attendance devices ov
 
 Hanvon provides an SDK consisting only  of a file named HwDevComm.dll. There is no official Linux support. Hence, I decided to reverse engineer the protocol. When used without a commukey / password, you can easily communicate with the device via a TCP socket and send the commands in plain text. However, when a key is used, messages sent and received are encrypted.
 
-Currently, I have only managed to decipher the messages when an 8-digit key is used.
-
 This is not official code from Hanvon. This is tested on the F710, but should work for the other models.
 
 For more info on Hanvon devices, visit:
