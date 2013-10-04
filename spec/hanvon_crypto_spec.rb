@@ -2,6 +2,24 @@ require 'spec_helper'
 
 describe Hanvon::Crypto do
 
+  it "should not accept empty password" do
+    lambda {
+      Hanvon::Crypto.new('')
+    }.should raise_exception(Hanvon::Crypto::InvalidPasswordException)
+  end
+
+  it "should not accept password with more than 8 digits" do
+    lambda {
+      Hanvon::Crypto.new('123123123')
+    }.should raise_exception(Hanvon::Crypto::InvalidPasswordException)
+  end
+
+  it "should not accept non-numeric password" do
+    lambda {
+      Hanvon::Crypto.new('abc')
+    }.should raise_exception(Hanvon::Crypto::InvalidPasswordException)
+  end
+
   context "with password 12345678" do
     before :all do
       @crypto = Hanvon::Crypto.new('12345678')

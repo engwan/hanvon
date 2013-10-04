@@ -1,6 +1,8 @@
 module Hanvon
   class Crypto
 
+    class InvalidPasswordException < StandardError; end
+
     attr_accessor :password
 
     def initialize(password)
@@ -17,14 +19,22 @@ module Hanvon
     alias_method :decrypt, :convert
 
     def password=(password)
-      @password = password
-      compute_key
+      if valid_password?(password)
+        @password = password
+        compute_key
+      else
+        raise InvalidPasswordException
+      end
     end
 
     protected
 
     def convert_char(char, pos)
       return char.ord ^ @key[pos % 8]
+    end
+
+    def valid_password?(password)
+      password =~ /\A\d{1,8}\z/
     end
 
     def compute_key
