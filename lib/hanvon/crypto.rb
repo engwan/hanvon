@@ -9,9 +9,9 @@ module Hanvon
       self.password = password
     end
 
-    def convert(message)
+    def convert(message, offset = 0)
       message.each_char.each_with_index.collect do |char, pos|
-        convert_char(char, pos)
+        convert_char(char, pos + offset)
       end.pack('C*')
     end
 
