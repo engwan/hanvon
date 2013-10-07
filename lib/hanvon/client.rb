@@ -37,7 +37,13 @@ module Hanvon
         chunk = socket.recv(1024)
         reply += encryptor ? encryptor.decrypt(chunk, reply.length % 8) : chunk
 
-        break if reply[-1] == ')' and reply =~ /\A\w+\((?:\w+\s*=\s*".*"\s*)*\)\z/
+        if reply[-1] == ')' and reply =~ /\A\w+\((?:\w+\s*=\s*".*"\s*)*\)\z/
+          if reply.start_with?("Wait(")
+            reply = ""
+          else
+            break
+          end
+        end
       end
 
       reply
