@@ -19,9 +19,41 @@ module Hanvon
       self.encryptor = Crypto.new(password) unless password.nil?
     end
 
+    def send_command(command, params = {})
+      param_strings = []
+      params.each { |k,v|
+        param_strings << "#{k}=\"#{v}\""
+      }
+
+      send("#{command}(#{param_strings.join(" ")})")
+    end
+
     def send(message)
       socket.write(encryptor ? encryptor.encrypt(message) : message)
-      read_reply
+      parse_reply(read_reply)
+    end
+
+    def parse_reply(reply)
+      response = []
+
+      response_data = reply.sub(/\AReturn\(/, "").chomp(")")
+      response_data.split("\n").each_with_index { |r, i|
+        row_hash = {}
+        r.scan(/(\S+?)="(.*?)"/).each do |m|
+          row_hash[m[0]] = m[1]
+        end
+
+        if i == 0
+          row_hash.delete('result')
+          row_hash.delete('dev_id')
+        end
+
+        response << row_hash unless row_hash.empty?
+      }
+
+      response = response.first if response.size == 1
+
+      return response
     end
 
     def close
