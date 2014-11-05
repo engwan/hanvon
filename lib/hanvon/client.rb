@@ -15,7 +15,14 @@ module Hanvon
       self.port = port
       self.password = password
 
-      self.socket = TCPSocket.new(host, port)
+      addr = Socket.getaddrinfo(host, nil)
+      sock = Socket.new(Socket.const_get(addr[0][0]), Socket::SOCK_STREAM, 0)
+
+      timeout = [60, 0].pack("l_2")
+      sock.setsockopt Socket::SOL_SOCKET, Socket::SO_RCVTIMEO, timeout
+      sock.setsockopt Socket::SOL_SOCKET, Socket::SO_SNDTIMEO, timeout
+
+      self.socket = sock
       self.encryptor = Crypto.new(password) unless password.nil?
     end
 
