@@ -22,6 +22,8 @@ module Hanvon
       sock.setsockopt Socket::SOL_SOCKET, Socket::SO_RCVTIMEO, timeout
       sock.setsockopt Socket::SOL_SOCKET, Socket::SO_SNDTIMEO, timeout
 
+      sock.connect(Socket.pack_sockaddr_in(port, addr[0][3]))
+
       self.socket = sock
       self.encryptor = Crypto.new(password) unless password.nil?
     end
