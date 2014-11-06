@@ -74,7 +74,7 @@ module Hanvon
     def read_reply
       reply = ""
 
-      while true
+      while IO.select([socket], [], [], 60)
         chunk = socket.recv(1024)
         reply += encryptor ? encryptor.decrypt(chunk, reply.length % 8) : chunk
 
